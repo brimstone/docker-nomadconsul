@@ -1,0 +1,46 @@
+#!/bin/sh
+
+[ "$NOMAD" = "no" ] && sv stop "$PWD"
+
+ADVERTISE=${ADVERTISE:-$(ip -f inet -o a s | grep -v 127.0.0.1 | awk '{gsub(/\/.*/, "", $4);print $4; exit}')}
+
+cat <<dog > /config.hcl
+bind_addr = "0.0.0.0"
+data_dir = "/data"
+advertise {
+  # We need to specify our host's IP because we can't
+  # advertise 0.0.0.0 to other nodes in our cluster.
+  rpc = "$ADVERTISE:4647"
+}
+dog
+
+if [ "$NOMAD_SERVER" = "yes" ]; then
+	cat <<dog >> /config.hcl
+server {
+  enabled = true
+  bootstrap_expect = $NOMAD_BOOTSTRAP_EXPECT
+}
+dog
+fi
+
+if [ "$NOMAD_CLIENT" = "yes" ]; then
+	cat <<dog >> /config.hcl
+client {
+  enabled = true
+}
+dog
+fi
+
+cat /config.hcl
+
+
+# slip our config file into our cmd line
+while [ "$RETRY" -gt 0 ]; do
+	echo "Starting nomad $RETRY left."
+	/bin/nomad agent -config /config.hcl "$@"
+	sleep "$TIMEOUT"
+	RETRY=$(( RETRY - 1 ))
+done
+
+killall runsvdir
+

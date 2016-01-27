@@ -1,0 +1,39 @@
+#!/bin/sh
+
+[ "$CONSUL" = "no" ] && sv stop "$PWD"
+
+GWDEV="$(ip route list 0/0 | awk '{print $NF}')"
+
+ADVERTISE="${ADVERTISE:-$(ip -f inet -o a s | awk -F " +|/" "\$2 != \"lo\" && \$2 != \"$GWDEV\" {print \$4; exit(0)}")}"
+
+# write our config file
+cat << dog > /consul.json
+{
+	"bootstrap_expect": $CONSUL_BOOTSTRAP_EXPECT,
+	"datacenter": "$CONSUL_DATACENTER",
+	"domain": "$CONSUL_DOMAIN",
+	"server": true,
+	"data_dir": "/consul",
+	"client_addr": "0.0.0.0",
+	"advertise_addr": "$ADVERTISE",
+	"ui_dir": "/webui"
+}
+dog
+
+[ -n "$CONSUL_WAN" ] && (
+	sleep 2
+	for w in $CONSUL_WAN; do
+		/bin/consul join -wan "$w"
+	done
+)&
+
+# slip our config file into our cmd line
+while [ "$RETRY" -gt 0 ]; do
+	echo "Starting consul $RETRY left"
+	/bin/consul agent -config-file /consul.json ${CONSUL_ARGS:-}
+	sleep "$TIMEOUT"
+	RETRY=$(( RETRY - 1 ))
+done
+
+killall runsvdir
+

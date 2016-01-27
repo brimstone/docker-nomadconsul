@@ -1,0 +1,28 @@
+FROM busybox
+
+# consul
+ENV CONSUL yes
+ENV CONSUL_DOMAIN consul
+ENV CONSUL_DATACENTER dc1
+ENV CONSUL_WAN ""
+ENV CONSUL_ARGS ""
+ENV CONSUL_BOOTSTRAP_EXPECT 1
+EXPOSE 8500 8600/udp 8400 8300 8301 8302
+COPY consul /bin/consul
+COPY webui /webui
+
+# nomad
+ENV NOMAD yes
+ENV NOMAD_BOOTSTRAP_EXPECT 1
+ENV NOMAD_JOIN ""
+ENV NOMAD_SERVER yes
+ENV NOMAD_CLIENT yes
+COPY nomad /bin/nomad
+EXPOSE 4646 4647
+
+# services in general
+ENV RETRY 5
+ENV TIMEOUT 30
+COPY init /init
+COPY service /service
+ENTRYPOINT ["/init"]

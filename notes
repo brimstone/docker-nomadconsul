@@ -1,0 +1,5 @@
+nomad client:
+docker -H tcp://$(docker ip dind1):2375 run --rm -it --name client --net host -e DOCKER_HOST=tcp://0.0.0.0:2375 brimstone/nomad:client -servers localhost:14647 --log-level debug
+
+nomad server:
+docker -H tcp://$(docker ip dind1):2375 run --rm -it --name nomad -p 14647:4647 -p 14646:4646 brimstone/nomad:server --bootstrap-expect 1
