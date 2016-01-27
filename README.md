@@ -1,6 +1,8 @@
 nomadconsul
 ===========
 
+[![Build Status](https://travis-ci.org/brimstone/docker-nomadconsul.svg?branch=master)](https://travis-ci.org/brimstone/docker-nomadconsul)
+
 This container provides both nomad and consul in a single container.
 
 Usage
