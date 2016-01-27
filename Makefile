@@ -1,7 +1,13 @@
-.PHONY: docker
+.PHONY: docker clean docker-push
 
 docker: consul webui nomad
-	docker build -t nomadconsul .
+	docker build -t brimstone/nomadconsul:$(git describe --always --tags --dirty).
+
+docker-push:
+	@docker login -e="${DOCKER_EMAIL}" -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
+	docker push brimstone/nomadconsul
+
+travis: docker docker-push
 
 consul:
 	wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip
