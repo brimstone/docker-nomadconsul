@@ -25,6 +25,19 @@ the interfaces it finds on the system.
 If the service fails to start after RETRY reaches 0 and TIMEOUT is exhausted,
 the entire container exits.
 
+Advanced Usage
+--------------
+```bash
+docker -H tcp://$(docker ip dind1):2375 run --rm -it \
+--net host \
+-e CONSUL_JOIN=$(docker ip dind2) \
+-e CONSUL_BOOTSTRAP_EXPECT=2 \
+-e NOMAD_JOIN=$(docker ip dind2) \
+-e NOMAD_BOOTSTRAP_EXPECT=2 \
+-e ADVERTISE=$(docker ip dind1) \
+brimstone/nomadconsul:0.1.0-2-g2e7d13a-dirty
+```
+
 Building
 --------
 

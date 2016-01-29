@@ -16,6 +16,15 @@ cat << dog > /consul.json
 	"data_dir": "/consul",
 	"client_addr": "0.0.0.0",
 	"advertise_addr": "$ADVERTISE",
+	"retry_interval": "10s",
+dog
+if [ -n "$CONSUL_JOIN" ]; then
+	echo "	\"retry_join\": [\"$(echo "$CONSUL_JOIN" | sed -e 's/ /","/g')\"]," >> /consul.json
+fi
+cat << dog >> /consul.json
+	"ports": {
+		"dns": $CONSUL_PORT_DNS
+	},
 	"ui_dir": "/webui"
 }
 dog
@@ -34,6 +43,8 @@ while [ "$RETRY" -gt 0 ]; do
 	sleep "$TIMEOUT"
 	RETRY=$(( RETRY - 1 ))
 done
+
+cat /consul.json
 
 killall runsvdir
 

@@ -19,6 +19,12 @@ if [ "$NOMAD_SERVER" = "yes" ]; then
 server {
   enabled = true
   bootstrap_expect = $NOMAD_BOOTSTRAP_EXPECT
+  retry_interval = "10s"
+dog
+if [ -n "$NOMAD_JOIN" ]; then
+	echo "	retry_join = [\"$(echo "$NOMAD_JOIN" | sed -e 's/ /","/g')\"]" >> /config.hcl
+fi
+	cat <<dog >> /config.hcl
 }
 dog
 fi
@@ -31,9 +37,6 @@ client {
 dog
 fi
 
-cat /config.hcl
-
-
 # slip our config file into our cmd line
 while [ "$RETRY" -gt 0 ]; do
 	echo "Starting nomad $RETRY left."
@@ -41,6 +44,8 @@ while [ "$RETRY" -gt 0 ]; do
 	sleep "$TIMEOUT"
 	RETRY=$(( RETRY - 1 ))
 done
+
+cat /config.hcl
 
 killall runsvdir
 
