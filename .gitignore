@@ -1,3 +1,4 @@
 webui
 consul
 nomad
+*.swp
