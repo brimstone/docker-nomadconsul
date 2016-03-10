@@ -23,7 +23,7 @@ webui:
 
 nomad:
 	tar c src \
-	| docker run --rm -i -e TAR=1 brimstone/golang-musl github.com/hashicorp/nomad \
+	| docker run --rm -i -e TAR=1 -e VERBOSE=1 brimstone/golang-musl github.com/hashicorp/nomad \
 	| tar -x ./nomad
 
 clean:
