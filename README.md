@@ -2,6 +2,7 @@ nomadconsul
 ===========
 
 [![Build Status](https://travis-ci.org/brimstone/docker-nomadconsul.svg?branch=master)](https://travis-ci.org/brimstone/docker-nomadconsul)
+[![](https://badge.imagelayers.io/brimstone/nomadconsul:0.2.svg)](https://imagelayers.io/?images=brimstone/nomadconsul:0.2 'Get your own badge on imagelayers.io')
 
 This container provides both nomad and consul in a single container.
 
