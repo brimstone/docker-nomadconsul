@@ -21,6 +21,9 @@ dog
 if [ -n "$CONSUL_JOIN" ]; then
 	echo "	\"retry_join\": [\"$(echo "$CONSUL_JOIN" | sed -e 's/ /","/g')\"]," >> /consul.json
 fi
+if [ -n "$CONSUL_RECURSORS" ]; then
+	echo "	\"recursors\": [\"$(echo "$CONSUL_RECURSORS" | sed -e 's/ /","/g')\"]," >> /consul.json
+fi
 cat << dog >> /consul.json
 	"ports": {
 		"dns": $CONSUL_PORT_DNS

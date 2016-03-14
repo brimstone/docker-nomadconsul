@@ -1,4 +1,4 @@
-webui
-consul
-nomad
+./webui
+./consul
+./nomad
 *.swp
