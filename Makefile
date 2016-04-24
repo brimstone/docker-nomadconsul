@@ -11,15 +11,15 @@ docker-push:
 travis: docker docker-push
 
 consul:
-	wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip
-	unzip -o consul_0.6.3_linux_amd64.zip
-	rm consul_0.6.3_linux_amd64.zip 
+	wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
+	unzip -o consul_0.6.4_linux_amd64.zip
+	rm consul_0.6.4_linux_amd64.zip 
 
 webui:
 	mkdir webui
-	wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_web_ui.zip
-	cd webui; unzip -o ../consul_0.6.3_web_ui.zip
-	rm consul_0.6.3_web_ui.zip
+	wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_web_ui.zip
+	cd webui; unzip -o ../consul_0.6.4_web_ui.zip
+	rm consul_0.6.4_web_ui.zip
 
 nomad:
 	tar c src \
