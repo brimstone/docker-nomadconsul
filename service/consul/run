@@ -24,6 +24,9 @@ fi
 if [ -n "$CONSUL_RECURSORS" ]; then
 	echo "	\"recursors\": [\"$(echo "$CONSUL_RECURSORS" | sed -e 's/ /","/g')\"]," >> /consul.json
 fi
+if [ -n "$CONSUL_WAN" ]; then
+	echo "	\"retry_wan_join\": [\"$(echo "$CONSUL_WAN" | sed -e 's/ /","/g')\"]," >> /consul.json
+fi
 cat << dog >> /consul.json
 	"ports": {
 		"dns": $CONSUL_PORT_DNS
@@ -31,13 +34,6 @@ cat << dog >> /consul.json
 	"ui_dir": "/webui"
 }
 dog
-
-[ -n "$CONSUL_WAN" ] && (
-	sleep 2
-	for w in $CONSUL_WAN; do
-		/bin/consul join -wan "$w"
-	done
-)&
 
 # slip our config file into our cmd line
 while [ "$RETRY" -gt 0 ]; do
