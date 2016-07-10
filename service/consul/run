@@ -25,7 +25,7 @@ if [ -n "$CONSUL_RECURSORS" ]; then
 	echo "	\"recursors\": [\"$(echo "$CONSUL_RECURSORS" | sed -e 's/ /","/g')\"]," >> /consul.json
 fi
 if [ -n "$CONSUL_WAN" ]; then
-	echo "	\"retry_wan_join\": [\"$(echo "$CONSUL_WAN" | sed -e 's/ /","/g')\"]," >> /consul.json
+	echo "	\"retry_join_wan\": [\"$(echo "$CONSUL_WAN" | sed -e 's/ /","/g')\"]," >> /consul.json
 fi
 cat << dog >> /consul.json
 	"ports": {
