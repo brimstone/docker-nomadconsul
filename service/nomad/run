@@ -37,15 +37,4 @@ client {
 dog
 fi
 
-# slip our config file into our cmd line
-while [ "$RETRY" -gt 0 ]; do
-	echo "Starting nomad $RETRY left."
-	/bin/nomad agent -config /config.hcl ${NOMAD_ARGS:-}
-	sleep "$TIMEOUT"
-	RETRY=$(( RETRY - 1 ))
-done
-
-cat /config.hcl
-
-killall runsvdir
-
+exec /bin/nomad agent -config /config.hcl ${NOMAD_ARGS:-}

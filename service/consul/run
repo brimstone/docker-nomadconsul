@@ -17,6 +17,7 @@ cat << dog > /consul.json
 	"client_addr": "0.0.0.0",
 	"advertise_addr": "$ADVERTISE",
 	"retry_interval": "10s",
+	"leave_on_terminate": true,
 dog
 if [ -n "$CONSUL_JOIN" ]; then
 	echo "	\"retry_join\": [\"$(echo "$CONSUL_JOIN" | sed -e 's/ /","/g')\"]," >> /consul.json
@@ -35,15 +36,4 @@ cat << dog >> /consul.json
 }
 dog
 
-# slip our config file into our cmd line
-while [ "$RETRY" -gt 0 ]; do
-	echo "Starting consul $RETRY left"
-	/bin/consul agent -config-file /consul.json ${CONSUL_ARGS:-}
-	sleep "$TIMEOUT"
-	RETRY=$(( RETRY - 1 ))
-done
-
-cat /consul.json
-
-killall runsvdir
-
+exec /bin/consul agent -config-file /consul.json ${CONSUL_ARGS:-}

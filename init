@@ -1,2 +1,2 @@
 #!/bin/sh
-/bin/runsvdir /service
+exec /bin/runsvdir /service -s /signal

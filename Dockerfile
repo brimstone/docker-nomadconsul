@@ -23,9 +23,7 @@ ENV NOMAD=yes \
 COPY nomad /bin/nomad
 EXPOSE 4646 4647
 
-# services in general
-ENV RETRY 5
-ENV TIMEOUT 30
 COPY init /init
+COPY signal /signal
 COPY service /service
 ENTRYPOINT ["/init"]

@@ -1,0 +1,25 @@
+#!/bin/sh -x
+
+waitall () {
+	awk '($5){exit 1;}' /proc/[0-9]*/stat && return 0
+	return 1
+}
+
+case "$1" in
+15)
+	echo "Stopping services..."
+	sv stop /service/*
+	echo "Asking processes to exit..."
+	killall5 -1
+	killall5 -15
+	if waitall; then
+		echo "Forcing processes to exit..."
+		killall5 -9
+		waitall
+	fi
+	kill -9 1
+	;;
+*)
+	echo "Can't handle $1"
+	;;
+esac
